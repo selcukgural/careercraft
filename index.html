@@ -6,7 +6,7 @@
   <title>CareerCraft — AI Career Assistant</title>
   <meta
     name="description"
-    content="CareerCraft için modern, koyu temalı, Türkçe ve İngilizce destekli GitHub Pages tanıtım sayfası."
+    content="Modern dark GitHub Pages portfolio site for CareerCraft with Turkish and English support."
   >
   <style>
     :root {
@@ -854,8 +854,20 @@
     const languageButtons = document.querySelectorAll("[data-lang]");
     const translatableElements = document.querySelectorAll("[data-i18n]");
 
-    const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
-    let currentLanguage = browserLanguage.toLowerCase().startsWith("tr") ? "tr" : "en";
+    function getInitialLanguage() {
+      try {
+        const savedLanguage = localStorage.getItem("careercraft-language");
+        if (savedLanguage === "tr" || savedLanguage === "en") {
+          return savedLanguage;
+        }
+      } catch (error) {
+      }
+
+      const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
+      return browserLanguage.toLowerCase().startsWith("tr") ? "tr" : "en";
+    }
+
+    let currentLanguage = getInitialLanguage();
     let currentSlide = 0;
 
     function renderCards(items, container, iconClass) {
@@ -893,6 +905,11 @@
     function applyLanguage(lang) {
       currentLanguage = lang;
       document.documentElement.lang = lang;
+
+      try {
+        localStorage.setItem("careercraft-language", lang);
+      } catch (error) {
+      }
 
       translatableElements.forEach((element) => {
         const key = element.dataset.i18n;
