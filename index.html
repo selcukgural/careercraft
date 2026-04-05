@@ -8,6 +8,22 @@
     name="description"
     content="Modern dark GitHub Pages portfolio site for CareerCraft with Turkish and English support."
   >
+  <script>
+    (function setInitialDocumentLanguage() {
+      try {
+        const savedLanguage = localStorage.getItem("careercraft-language");
+        if (savedLanguage === "tr" || savedLanguage === "en") {
+          document.documentElement.lang = savedLanguage;
+          return;
+        }
+      } catch (error) {
+        console.warn("CareerCraft language preference could not be read.", error);
+      }
+
+      const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
+      document.documentElement.lang = browserLanguage.toLowerCase().startsWith("tr") ? "tr" : "en";
+    })();
+  </script>
   <style>
     :root {
       color-scheme: dark;
@@ -861,6 +877,7 @@
           return savedLanguage;
         }
       } catch (error) {
+        console.warn("CareerCraft language preference could not be read.", error);
       }
 
       const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
@@ -909,6 +926,7 @@
       try {
         localStorage.setItem("careercraft-language", lang);
       } catch (error) {
+        console.warn("CareerCraft language preference could not be saved.", error);
       }
 
       translatableElements.forEach((element) => {
