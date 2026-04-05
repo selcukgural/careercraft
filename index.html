@@ -556,15 +556,15 @@
         </div>
       </div>
       <div class="nav-links">
-        <a href="#tools" data-i18n="navTools" aria-label="Tools section"></a>
-        <a href="#features" data-i18n="navFeatures" aria-label="Features section"></a>
-        <a href="#stack" data-i18n="navStack" aria-label="Tech stack section"></a>
-        <a href="#pricing" data-i18n="navPricing" aria-label="Pricing section"></a>
-        <a href="#gallery" data-i18n="navGallery" aria-label="Gallery section"></a>
+        <a href="#tools" data-i18n="navTools"></a>
+        <a href="#features" data-i18n="navFeatures"></a>
+        <a href="#stack" data-i18n="navStack"></a>
+        <a href="#pricing" data-i18n="navPricing"></a>
+        <a href="#gallery" data-i18n="navGallery"></a>
       </div>
-      <div class="language-switch" aria-label="Language switcher">
-        <button type="button" data-lang="tr" aria-label="Switch to Turkish">TR</button>
-        <button type="button" data-lang="en" aria-label="Switch to English">EN</button>
+      <div class="language-switch" data-i18n-aria-label="languageSwitcherLabel">
+        <button type="button" data-lang="tr" data-i18n-aria-label="switchToTurkishLabel">TR</button>
+        <button type="button" data-lang="en" data-i18n-aria-label="switchToEnglishLabel">EN</button>
       </div>
     </nav>
 
@@ -662,7 +662,7 @@
             <p id="gallerySlideDescription"></p>
             <div class="gallery-meta">
               <div class="gallery-counter" id="galleryCounter"></div>
-              <div class="gallery-controls" aria-label="Gallery controls">
+              <div class="gallery-controls" data-i18n-aria-label="galleryControlsLabel">
                 <button type="button" id="prevSlide" aria-label="Previous slide">←</button>
                 <button type="button" id="nextSlide" aria-label="Next slide">→</button>
               </div>
@@ -673,7 +673,7 @@
                 <img
                   id="galleryImage"
                   src="./phone_en_01_home.png"
-                  alt=""
+                  alt="CareerCraft app screenshot"
                 >
             </div>
           </div>
@@ -720,6 +720,10 @@
         galleryEyebrow: "Canlı uygulama önizlemesi",
         footerText: "CareerCraft · Flutter, Firebase, OpenAI ve RevenueCat ile geliştirildi · İletişim: gurallabs@gmail.com",
         pricingBadge: "Önerilen plan",
+        languageSwitcherLabel: "Dil seçici",
+        switchToTurkishLabel: "Türkçeye geç",
+        switchToEnglishLabel: "İngilizceye geç",
+        galleryControlsLabel: "Galeri kontrolleri",
         tools: [
           ["📄", "CV / Özgeçmiş Oluşturucu", "ATS uyumlu özet, başarı maddeleri ve rol odaklı profesyonel içerik üretir."],
           ["✉️", "Ön Yazı Yazıcı", "İş ilanına ve deneyime göre ikna edici, kişiselleştirilmiş cover letter oluşturur."],
@@ -796,6 +800,10 @@
         galleryEyebrow: "Live app preview",
         footerText: "CareerCraft · Built with Flutter, Firebase, OpenAI, and RevenueCat · Contact: gurallabs@gmail.com",
         pricingBadge: "Recommended",
+        languageSwitcherLabel: "Language switcher",
+        switchToTurkishLabel: "Switch to Turkish",
+        switchToEnglishLabel: "Switch to English",
+        galleryControlsLabel: "Gallery controls",
         tools: [
           ["📄", "CV / Resume Builder", "Generates ATS-friendly summaries, achievement bullets, and role-focused professional copy."],
           ["✉️", "Cover Letter Writer", "Creates persuasive, tailored cover letters based on the job post and user experience."],
@@ -852,6 +860,7 @@
     const galleryCounter = document.getElementById("galleryCounter");
     const languageButtons = document.querySelectorAll("[data-lang]");
     const translatableElements = document.querySelectorAll("[data-i18n]");
+    const ariaTranslatableElements = document.querySelectorAll("[data-i18n-aria-label]");
 
     function getInitialLanguage() {
       try {
@@ -915,6 +924,11 @@
       translatableElements.forEach((element) => {
         const key = element.dataset.i18n;
         element.textContent = content[lang][key];
+      });
+
+      ariaTranslatableElements.forEach((element) => {
+        const key = element.dataset.i18nAriaLabel;
+        element.setAttribute("aria-label", content[lang][key]);
       });
 
       renderCards(content[lang].tools, toolsGrid, "tool-card");
