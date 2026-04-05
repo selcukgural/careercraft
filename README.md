@@ -1,4 +1,4 @@
-# CareerCraft Privacy
+# CareerCraft
 
 Website: https://selcukgural.github.io/careercraft-privacy
 
