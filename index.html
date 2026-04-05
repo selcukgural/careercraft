@@ -695,7 +695,7 @@
         navPricing: "Fiyatlandırma",
         navGallery: "Galeri",
         eyebrow: "Android • Flutter • AI Destekli Kariyer Asistanı",
-        heroTitle: "Kariyerinin her adımı için akıllı üretim platformu.",
+        heroTitle: "Kariyerin her adımı için akıllı içerik platformu.",
         heroDescription: "CareerCraft; CV, ön yazı, LinkedIn biyografisi, mülakat hazırlığı, profesyonel e-posta, maaş müzakeresi, performans değerlendirmesi ve LinkedIn mesajlarını saniyeler içinde üreten modern bir mobil asistandır.",
         heroPrimaryCta: "Planları İncele",
         heroSecondaryCta: "Ekranları Gör",
@@ -922,7 +922,7 @@
       renderCards(content[lang].stack, techGrid, "tech-card");
       renderPricing(content[lang].pricing);
 
-      currentSlide = Math.min(currentSlide, content[lang].slides.length - 1);
+      currentSlide = 0;
       renderSlide();
 
       languageButtons.forEach((button) => {
