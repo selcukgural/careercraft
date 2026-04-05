@@ -1,5 +1,5 @@
 # CareerCraft
 
-Website: https://selcukgural.github.io/careercraft-privacy
+Website & privacy details: https://selcukgural.github.io/careercraft-privacy
 
-All project and privacy details are available on the website.
+Current details are available on the published GitHub Pages site above.
