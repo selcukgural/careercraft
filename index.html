@@ -1,14 +1,971 @@
 <!DOCTYPE html>
- <html lang="tr">
- <head><meta charset="UTF-8"><title>CareerCraft Gizlilik Politikası</title></head>
- <body style="font-family:sans-serif;max-width:800px;margin:40px auto;padding:20px">
- <h1>Gizlilik Politikası</h1>
- <p>Son güncelleme: Nisan 2025</p>
- <h2>Toplanan Veriler</h2>
- <p>CareerCraft, Google hesabınızla giriş yapar ve Firebase'de kullanıcı kimliğinizi saklar.</p>
- <h2>Kullanım Amacı</h2>
- <p>Veriler yalnızca uygulama işlevselliği için kullanılır; üçüncü taraflarla paylaşılmaz.</p>
- <h2>İletişim</h2>
- <p>gurallabs@gmail.com</p>
- </body>
- </html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerCraft — AI Career Assistant</title>
+  <meta
+    name="description"
+    content="AI-powered career assistant for CVs, cover letters, LinkedIn profiles, interview prep, and more in Turkish and English."
+  >
+  <script>
+    (function setInitialDocumentLanguage() {
+      try {
+        const savedLanguage = localStorage.getItem("careercraft-language");
+        if (savedLanguage === "tr" || savedLanguage === "en") {
+          document.documentElement.lang = savedLanguage;
+          return;
+        }
+      } catch (error) {
+        console.warn("CareerCraft language preference could not be read.", error);
+      }
+
+      const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
+      document.documentElement.lang = browserLanguage.toLowerCase().startsWith("tr") ? "tr" : "en";
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --bg-soft: rgba(17, 28, 46, 0.9);
+      --card: rgba(15, 25, 42, 0.86);
+      --card-strong: rgba(20, 33, 56, 0.96);
+      --text: #edf3ff;
+      --muted: #9fb0ca;
+      --line: rgba(159, 176, 202, 0.18);
+      --accent: #6dd3ff;
+      --accent-2: #7c8cff;
+      --success: #7df0c6;
+      --shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(124, 140, 255, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(109, 211, 255, 0.16), transparent 24%),
+        linear-gradient(180deg, #050b14 0%, #08101d 45%, #060d16 100%);
+      color: var(--text);
+      min-height: 100vh;
+      visibility: hidden;
+    }
+
+    body.ready {
+      visibility: visible;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page-shell {
+      width: min(calc(100% - 32px), var(--max-width));
+      margin: 0 auto;
+      padding: 24px 0 56px;
+    }
+
+    .nav {
+      position: sticky;
+      top: 16px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      background: rgba(7, 15, 28, 0.72);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #05101e;
+      font-size: 1.15rem;
+      box-shadow: 0 16px 36px rgba(109, 211, 255, 0.28);
+    }
+
+    .nav-links,
+    .language-switch {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a,
+    .language-switch button,
+    .gallery-controls button {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font: inherit;
+    }
+
+    .nav-links a:hover,
+    .language-switch button:hover,
+    .gallery-controls button:hover {
+      color: var(--text);
+      border-color: rgba(109, 211, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .language-switch button.active,
+    .gallery-controls button.active {
+      background: linear-gradient(135deg, rgba(109, 211, 255, 0.18), rgba(124, 140, 255, 0.22));
+      color: var(--text);
+      border-color: rgba(109, 211, 255, 0.45);
+    }
+
+    .hero,
+    .section-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(14, 24, 41, 0.9), rgba(9, 17, 30, 0.92));
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      padding: 34px;
+      margin-bottom: 28px;
+    }
+
+    .hero::before,
+    .section-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -20% -35% auto;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(109, 211, 255, 0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(109, 211, 255, 0.08);
+      color: var(--accent);
+      border: 1px solid rgba(109, 211, 255, 0.16);
+      font-size: 0.95rem;
+      margin-bottom: 18px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 1.06;
+      letter-spacing: -0.05em;
+      margin-bottom: 18px;
+      max-width: 12ch;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.7;
+      max-width: 62ch;
+    }
+
+    .hero-actions,
+    .hero-stats,
+    .pricing-grid,
+    .tools-grid,
+    .features-grid,
+    .tech-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-actions {
+      grid-template-columns: repeat(2, minmax(0, max-content));
+      margin-top: 24px;
+    }
+
+    .button-primary,
+    .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .button-primary {
+      color: #03101f;
+      background: linear-gradient(135deg, var(--accent), #96e3ff);
+      box-shadow: 0 16px 36px rgba(109, 211, 255, 0.22);
+    }
+
+    .button-secondary {
+      border-color: var(--line);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .button-primary:hover,
+    .button-secondary:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-self: end;
+    }
+
+    .stat-card,
+    .tool-card,
+    .feature-card,
+    .tech-card,
+    .price-card,
+    .gallery-panel,
+    .gallery-copy {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--card);
+    }
+
+    .stat-card {
+      padding: 22px;
+      min-height: 138px;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      letter-spacing: -0.04em;
+    }
+
+    .stat-card span {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    section {
+      margin-top: 28px;
+    }
+
+    .section-card {
+      padding: 28px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      max-width: 62ch;
+      line-height: 1.7;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.65rem, 2vw, 2.2rem);
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+    }
+
+    .tools-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .tool-card,
+    .feature-card,
+    .tech-card,
+    .price-card {
+      padding: 22px;
+    }
+
+    .tool-icon,
+    .feature-icon,
+    .tech-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, rgba(109, 211, 255, 0.16), rgba(124, 140, 255, 0.22));
+      color: var(--accent);
+      font-size: 1.25rem;
+    }
+
+    .tool-card h3,
+    .feature-card h3,
+    .tech-card h3,
+    .price-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .tool-card p,
+    .feature-card p,
+    .tech-card p,
+    .price-card p,
+    .price-card li,
+    .gallery-copy p {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .features-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tech-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .gallery-layout {
+      display: grid;
+      grid-template-columns: 0.94fr 1.06fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .gallery-copy {
+      padding: 24px;
+    }
+
+    .gallery-copy h3 {
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .gallery-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .gallery-counter {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .gallery-panel {
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(14, 24, 41, 0.94), rgba(10, 18, 32, 0.96));
+    }
+
+    .gallery-frame {
+      position: relative;
+      width: min(100%, 380px);
+      margin: 0 auto;
+      padding: 12px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.32);
+    }
+
+    .gallery-frame img {
+      width: 100%;
+      border-radius: 22px;
+      aspect-ratio: 9 / 19;
+      object-fit: cover;
+      background: #0c1627;
+    }
+
+    .pricing-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .price-card {
+      position: relative;
+      min-height: 100%;
+    }
+
+    .price-card.highlight {
+      background: linear-gradient(180deg, rgba(24, 38, 64, 0.98), rgba(14, 25, 45, 0.98));
+      border-color: rgba(109, 211, 255, 0.28);
+      box-shadow: 0 18px 40px rgba(109, 211, 255, 0.12);
+    }
+
+    .price-badge {
+      display: inline-flex;
+      margin-bottom: 16px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      color: var(--success);
+      background: rgba(125, 240, 198, 0.1);
+      border: 1px solid rgba(125, 240, 198, 0.18);
+      font-size: 0.9rem;
+    }
+
+    .price-value {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      margin: 10px 0 14px;
+    }
+
+    .price-card ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    footer {
+      margin-top: 28px;
+      padding: 24px 0 8px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1100px) {
+      .hero,
+      .gallery-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .tools-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .tech-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .pricing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page-shell {
+        width: min(calc(100% - 24px), var(--max-width));
+      }
+
+      .nav,
+      .section-header {
+        border-radius: 24px;
+      }
+
+      .nav,
+      .section-header,
+      .gallery-meta {
+        align-items: flex-start;
+      }
+
+      .nav,
+      .section-header {
+        flex-direction: column;
+      }
+
+      .hero,
+      .section-card {
+        padding: 22px;
+      }
+
+      .hero-actions,
+      .hero-stats,
+      .features-grid,
+      .tools-grid,
+      .tech-grid,
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-primary,
+      .button-secondary {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <noscript><style>body{visibility:visible;}</style></noscript>
+  <div class="page-shell">
+    <nav class="nav" aria-label="Main navigation">
+      <div class="brand">
+        <div class="brand-badge">✦</div>
+        <div>
+          <div>CareerCraft</div>
+          <small style="color: var(--muted); font-weight: 500;">AI Career Assistant</small>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#tools" data-i18n="navTools"></a>
+        <a href="#features" data-i18n="navFeatures"></a>
+        <a href="#stack" data-i18n="navStack"></a>
+        <a href="#pricing" data-i18n="navPricing"></a>
+        <a href="#gallery" data-i18n="navGallery"></a>
+      </div>
+      <div class="language-switch" data-i18n-aria-label="languageSwitcherLabel">
+        <button type="button" data-lang="tr" data-i18n-aria-label="switchToTurkishLabel">TR</button>
+        <button type="button" data-lang="en" data-i18n-aria-label="switchToEnglishLabel">EN</button>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <div class="eyebrow" data-i18n="eyebrow"></div>
+        <h1 data-i18n="heroTitle"></h1>
+        <p data-i18n="heroDescription"></p>
+        <div class="hero-actions">
+          <a class="button-primary" href="#pricing" data-i18n="heroPrimaryCta"></a>
+          <a class="button-secondary" href="#gallery" data-i18n="heroSecondaryCta"></a>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-card">
+          <strong data-i18n="stat1Value"></strong>
+          <span data-i18n="stat1Label"></span>
+        </div>
+        <div class="stat-card">
+          <strong data-i18n="stat2Value"></strong>
+          <span data-i18n="stat2Label"></span>
+        </div>
+        <div class="stat-card">
+          <strong data-i18n="stat3Value"></strong>
+          <span data-i18n="stat3Label"></span>
+        </div>
+        <div class="stat-card">
+          <strong data-i18n="stat4Value"></strong>
+          <span data-i18n="stat4Label"></span>
+        </div>
+      </div>
+    </header>
+
+    <section id="tools">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="toolsTitle"></h2>
+            <p data-i18n="toolsDescription"></p>
+          </div>
+        </div>
+        <div class="tools-grid" id="toolsGrid"></div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="featuresTitle"></h2>
+            <p data-i18n="featuresDescription"></p>
+          </div>
+        </div>
+        <div class="features-grid" id="featuresGrid"></div>
+      </div>
+    </section>
+
+    <section id="stack">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="stackTitle"></h2>
+            <p data-i18n="stackDescription"></p>
+          </div>
+        </div>
+        <div class="tech-grid" id="techGrid"></div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="pricingTitle"></h2>
+            <p data-i18n="pricingDescription"></p>
+          </div>
+        </div>
+        <div class="pricing-grid" id="pricingGrid"></div>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 data-i18n="galleryTitle"></h2>
+            <p data-i18n="galleryDescription"></p>
+          </div>
+        </div>
+        <div class="gallery-layout">
+          <div class="gallery-copy">
+            <div class="eyebrow" data-i18n="galleryEyebrow"></div>
+            <h3 id="gallerySlideTitle"></h3>
+            <p id="gallerySlideDescription"></p>
+            <div class="gallery-meta">
+              <div class="gallery-counter" id="galleryCounter"></div>
+              <div class="gallery-controls" data-i18n-aria-label="galleryControlsLabel">
+                <button type="button" id="prevSlide" data-i18n-aria-label="previousSlideLabel">←</button>
+                <button type="button" id="nextSlide" data-i18n-aria-label="nextSlideLabel">→</button>
+              </div>
+            </div>
+          </div>
+          <div class="gallery-panel">
+            <div class="gallery-frame">
+                <img
+                  id="galleryImage"
+                  src="./phone_en_01_home.png"
+                  alt="CareerCraft app screenshot"
+                >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div data-i18n="footerText"></div>
+    </footer>
+  </div>
+
+  <script>
+    const content = {
+      tr: {
+        navTools: "Araçlar",
+        navFeatures: "Özellikler",
+        navStack: "Teknoloji Yığını",
+        navPricing: "Fiyatlandırma",
+        navGallery: "Galeri",
+        eyebrow: "Android • Flutter • AI Destekli Kariyer Asistanı",
+        heroTitle: "Kariyerinizin her adımı için akıllı içerik platformu.",
+        heroDescription: "CareerCraft; CV, ön yazı, LinkedIn biyografisi, mülakat hazırlığı, profesyonel e-posta, maaş müzakeresi, performans değerlendirmesi ve LinkedIn mesajlarını saniyeler içinde üreten modern bir mobil asistandır.",
+        heroPrimaryCta: "Planları İncele",
+        heroSecondaryCta: "Ekranları Gör",
+        stat1Value: "8",
+        stat1Label: "Tüm kariyer yolculuğunu kapsayan ana araç.",
+        stat2Value: "TR + EN",
+        stat2Label: "Tam yerelleştirme ve dil ayarına göre içerik üretimi.",
+        stat3Value: "100/gün",
+        stat3Label: "Premium kullanıcılar için günlük üretim kapasitesi.",
+        stat4Value: "30 sn",
+        stat4Label: "Her AI isteğinde güvenli zaman aşımı kontrolü.",
+        toolsTitle: "8 ana araç",
+        toolsDescription: "CareerCraft, adayların başvurudan mülakata ve iş içi iletişime kadar tüm kariyer akışını tek uygulamada yönetmesini sağlar.",
+        featuresTitle: "Öne çıkan özellikler",
+        featuresDescription: "Yerelleştirme, güvenlik, geçmiş kaydı ve kişiselleştirme gibi kritik deneyimler tek bir modern kullanıcı akışında birleşir.",
+        stackTitle: "Teknoloji yığını",
+        stackDescription: "Flutter tabanlı mobil deneyim; Firebase servisleri, OpenAI ve RevenueCat ile güvenli ve ölçeklenebilir şekilde desteklenir.",
+        pricingTitle: "Fiyatlandırma",
+        pricingDescription: "Her plan tüm 8 araca erişim sağlar; Premium katmanlar daha yüksek üretim limiti, tam geçmiş erişimi ve özel talimatlar ekler.",
+        galleryTitle: "Uygulama galerisini keşfet",
+        galleryDescription: "Ana akış, üretim araçları ve geçmiş ekranları modern bir telefon çerçevesi içinde sergilenir.",
+        galleryEyebrow: "Canlı uygulama önizlemesi",
+        footerText: "CareerCraft · Flutter, Firebase, OpenAI ve RevenueCat ile geliştirildi · İletişim: gurallabs@gmail.com",
+        pricingBadge: "Önerilen plan",
+        languageSwitcherLabel: "Dil seçici",
+        switchToTurkishLabel: "Türkçeye geç",
+        switchToEnglishLabel: "İngilizceye geç",
+        galleryControlsLabel: "Galeri kontrolleri",
+        previousSlideLabel: "Önceki görsel",
+        nextSlideLabel: "Sonraki görsel",
+        tools: [
+          ["📄", "CV / Özgeçmiş Oluşturucu", "ATS uyumlu özet, başarı maddeleri ve rol odaklı profesyonel içerik üretir."],
+          ["✉️", "Ön Yazı Yazıcı", "İş ilanına ve deneyime göre ikna edici, kişiselleştirilmiş cover letter oluşturur."],
+          ["💼", "LinkedIn Biyografi Üreticisi", "\"Hakkımda\" bölümünü hedef odaklı, etkileyici ve kelime sınırına uygun yazar."],
+          ["🎤", "Mülakat Hazırlık Koçu", "Pozisyon ve şirkete özel soru-cevap çiftleriyle yapılandırılmış hazırlık sunar."],
+          ["📬", "Profesyonel E-posta Yazıcı", "6 e-posta tipi ve 5 ton seçeneğiyle iş iletişimini hızlıca üretir."],
+          ["💸", "Maaş Müzakere Koçu", "Konuşma noktaları ve hazır karşı teklif e-postasıyla müzakereyi destekler."],
+          ["📊", "Performans Değerlendirme Yazıcı", "Kişisel, ekip arkadaşı veya yönetici değerlendirmelerini dengeli biçimde oluşturur."],
+          ["🤝", "LinkedIn Mesaj Yazıcı", "Bağlantı isteği, soğuk DM, işe alımcı yanıtı ve takip mesajlarını optimize eder."]
+        ],
+        features: [
+          ["🌍", "Türkçe + İngilizce destek", "Dil ayarına göre hem arayüz hem de AI çıktısı seçilen dilde sunulur."],
+          ["📝", "Özel talimatlar", "Kullanıcılar tonu, dili veya hedef profili belirleyen kalıcı komutlar kaydedebilir."],
+          ["📜", "Geçmiş saklama", "Her üretim tarih damgası ve araç etiketiyle saklanır; Premium tüm geçmişi açar."],
+          ["🎨", "Üç tema modu", "Karanlık, aydınlık ve sistem teması tercihi cihazda kalıcı olarak tutulur."],
+          ["🔐", "Google ile giriş", "Firebase Authentication ile güvenli Google Sign-In ve anonim kullanım desteklenir."],
+          ["⚡", "Uzaktan yönetilen limitler", "Remote Config, üretim limitleri ve davranışları uygulama güncellemesi olmadan ayarlar."],
+          ["⏱️", "30 saniye zaman aşımı", "Askıda kalan AI istekleri engellenir, deneyim daha güvenilir hale gelir."],
+          ["🛡️", "Crashlytics + RevenueCat", "Gerçek zamanlı hata takibi ve güvenli abonelik yönetimi tek akışta birleşir."]
+        ],
+        stack: [
+          ["🧩", "Flutter + Dart", "Google Play için yüksek performanslı, modern tek kod tabanı."],
+          ["🔥", "Firebase ekosistemi", "Auth, Firestore, Analytics, Crashlytics ve Remote Config ile tam destek."],
+          ["🧠", "OpenAI GPT API", "Kariyer odaklı içerik üretimini ve ton uyarlamasını güçlendirir."],
+          ["💳", "RevenueCat", "Aylık, yıllık ve ömür boyu paketlerin güvenli satın alma akışını yönetir."],
+          ["🧭", "Riverpod + go_router", "Ölçeklenebilir state yönetimi ve temiz gezinme yapısı sağlar."],
+          ["✨", "Google Fonts + Animations", "Google Fonts, flutter_animate ve Lottie ile premium bir görünüm sunar."]
+        ],
+        pricing: [
+          { name: "Ücretsiz", price: "$0", description: "Tüm 8 araçla tanışmak isteyen kullanıcılar için başlangıç paketi.", items: ["Sınırlı günlük üretim", "Tüm 8 araç erişimi", "Bugünün geçmişi"], highlight: false },
+          { name: "Premium Aylık", price: "$4.99/ay", description: "Esnek abonelik isteyen aktif iş arayan profesyoneller için.", items: ["100 üretim/gün", "Özel talimatlar", "Tam geçmiş erişimi"], highlight: true },
+          { name: "Premium Yıllık", price: "$29.99/yıl", description: "Aynı Premium deneyimi daha yüksek tasarrufla sunar.", items: ["100 üretim/gün", "%50'ye varan indirim avantajı", "Tam geçmiş + özel talimatlar"], highlight: false },
+          { name: "Ömür Boyu", price: "$49.99", description: "Tek sefer ödeme ile tüm özelliklere kalıcı erişim sağlar.", items: ["Her şey dahil erişim", "Tek ödeme", "Uzun vadeli kullanım için ideal"], highlight: false }
+        ],
+        slides: [
+          { image: "./phone_en_01_home.png", title: "Ana Ekran", description: "Kullanıcı tüm araçları tek bakışta görür ve günlük üretim akışını hızla başlatır." },
+          { image: "./phone_en_02_cv_resume.png", title: "CV Oluşturucu", description: "Profesyonel özet ve başarı odaklı maddelerle ATS dostu CV içeriği hazırlanır." },
+          { image: "./phone_en_03_cover_letter.png", title: "Ön Yazı Akışı", description: "İlana özel güçlü açılış ve hedef şirkete uyarlanmış içerik üretilir." },
+          { image: "./phone_en_04_linkedin.png", title: "LinkedIn Profili", description: "LinkedIn biyografisi karakter sınırına uygun ve etkileyici biçimde yazılır." },
+          { image: "./phone_en_05_interview.png", title: "Mülakat Hazırlığı", description: "Rol odaklı sorular ve yapılandırılmış cevap ipuçlarıyla hazırlık hızlanır." },
+          { image: "./phone_en_06_history.png", title: "Geçmiş Ekranı", description: "Üretilen içerikler tarih ve araç etiketiyle arşivlenir." },
+          { image: "./phone_en_07_settings.png", title: "Ayarlar", description: "Dil, tema, abonelik ve kullanıcı tercihleri tek merkezden yönetilir." }
+        ]
+      },
+      en: {
+        navTools: "Tools",
+        navFeatures: "Features",
+        navStack: "Tech Stack",
+        navPricing: "Pricing",
+        navGallery: "Gallery",
+        eyebrow: "Android • Flutter • AI-Powered Career Assistant",
+        heroTitle: "An intelligent content platform for every step of your career.",
+        heroDescription: "CareerCraft is a modern mobile assistant that generates CVs, cover letters, LinkedIn bios, interview prep, professional emails, salary negotiation scripts, performance reviews, and LinkedIn messages in seconds.",
+        heroPrimaryCta: "View Plans",
+        heroSecondaryCta: "See Screens",
+        stat1Value: "8",
+        stat1Label: "Core tools covering the full career journey.",
+        stat2Value: "TR + EN",
+        stat2Label: "Fully localized experience with language-aware AI output.",
+        stat3Value: "100/day",
+        stat3Label: "Daily generation capacity for Premium users.",
+        stat4Value: "30 sec",
+        stat4Label: "Safe timeout enforcement on every AI request.",
+        toolsTitle: "8 core tools",
+        toolsDescription: "CareerCraft helps professionals manage the full flow from application to interview and workplace communication in a single app.",
+        featuresTitle: "Highlighted features",
+        featuresDescription: "Localization, security, history, and personalization come together in one polished mobile experience.",
+        stackTitle: "Technology stack",
+        stackDescription: "The Flutter mobile experience is backed by Firebase services, OpenAI, and RevenueCat for a secure, scalable product foundation.",
+        pricingTitle: "Pricing",
+        pricingDescription: "Every plan includes all 8 tools; Premium tiers add higher limits, full history access, and custom instructions.",
+        galleryTitle: "Explore the app gallery",
+        galleryDescription: "The main flow, generation tools, and history views are presented inside a modern mobile showcase.",
+        galleryEyebrow: "Live app preview",
+        footerText: "CareerCraft · Built with Flutter, Firebase, OpenAI, and RevenueCat · Contact: gurallabs@gmail.com",
+        pricingBadge: "Recommended",
+        languageSwitcherLabel: "Language switcher",
+        switchToTurkishLabel: "Switch to Turkish",
+        switchToEnglishLabel: "Switch to English",
+        galleryControlsLabel: "Gallery controls",
+        previousSlideLabel: "Previous slide",
+        nextSlideLabel: "Next slide",
+        tools: [
+          ["📄", "CV / Resume Builder", "Generates ATS-friendly summaries, achievement bullets, and role-focused professional copy."],
+          ["✉️", "Cover Letter Writer", "Creates persuasive, tailored cover letters based on the job post and user experience."],
+          ["💼", "LinkedIn Bio Generator", "Writes an impactful About section that stays aligned with platform-friendly length."],
+          ["🎤", "Interview Prep Coach", "Produces role-specific question and answer pairs for structured interview practice."],
+          ["📬", "Professional Email Writer", "Builds polished work emails across 6 templates and 5 tone options."],
+          ["💸", "Salary Negotiation Coach", "Provides talking points and a ready-to-send counter-offer email."],
+          ["📊", "Performance Review Writer", "Creates balanced self, peer, and manager review drafts."],
+          ["🤝", "LinkedIn Message Writer", "Optimizes connection requests, cold DMs, recruiter replies, and follow-ups."]
+        ],
+        features: [
+          ["🌍", "Turkish + English support", "Both the interface and generated AI output follow the selected language."],
+          ["📝", "Custom instructions", "Users can save always-on prompts for tone, language, or target profile preferences."],
+          ["📜", "Stored history", "Every generation is saved with timestamps and tool labels; Premium unlocks the full archive."],
+          ["🎨", "Three theme modes", "Dark, light, and system themes are stored persistently per user preference."],
+          ["🔐", "Google sign-in", "Secure Firebase Authentication with Google Sign-In plus anonymous usage support."],
+          ["⚡", "Remote-managed limits", "Remote Config adjusts generation limits and app behavior without forced updates."],
+          ["⏱️", "30-second timeout", "Prevents hanging AI calls and keeps the experience responsive."],
+          ["🛡️", "Crashlytics + RevenueCat", "Real-time error monitoring and secure subscription management work together."]
+        ],
+        stack: [
+          ["🧩", "Flutter + Dart", "A high-performance single codebase built for Google Play."],
+          ["🔥", "Firebase ecosystem", "Auth, Firestore, Analytics, Crashlytics, and Remote Config power the product."],
+          ["🧠", "OpenAI GPT API", "Drives career-focused generation and tone adaptation across all tools."],
+          ["💳", "RevenueCat", "Handles secure monthly, yearly, and lifetime in-app purchase flows."],
+          ["🧭", "Riverpod + go_router", "Supports scalable state management and clean navigation architecture."],
+          ["✨", "Google Fonts + Animations", "Google Fonts, flutter_animate, and Lottie help deliver a premium feel."]
+        ],
+        pricing: [
+          { name: "Free", price: "$0", description: "An accessible starting point for users discovering all 8 tools.", items: ["Limited daily generations", "Access to all 8 tools", "Today's history"], highlight: false },
+          { name: "Premium Monthly", price: "$4.99/mo", description: "Best for active job seekers who want flexibility.", items: ["100 generations/day", "Custom instructions", "Full history access"], highlight: true },
+          { name: "Premium Yearly", price: "$29.99/yr", description: "The same Premium experience with stronger annual savings.", items: ["100 generations/day", "Up to 50% discount value", "Full history + instructions"], highlight: false },
+          { name: "Lifetime", price: "$49.99", description: "A one-time payment for permanent access to everything.", items: ["All features included", "Single payment", "Ideal for long-term use"], highlight: false }
+        ],
+        slides: [
+          { image: "./phone_en_01_home.png", title: "Home Screen", description: "Users see every tool at a glance and launch their daily generation flow instantly." },
+          { image: "./phone_en_02_cv_resume.png", title: "CV Builder", description: "ATS-friendly resume content is generated with strong summaries and achievement bullets." },
+          { image: "./phone_en_03_cover_letter.png", title: "Cover Letter Flow", description: "Tailored cover letters are generated for a specific role with stronger openings." },
+          { image: "./phone_en_04_linkedin.png", title: "LinkedIn Profile", description: "The LinkedIn bio stays impactful while respecting platform-friendly length." },
+          { image: "./phone_en_05_interview.png", title: "Interview Prep", description: "Role-specific questions and structured answer guidance accelerate preparation." },
+          { image: "./phone_en_06_history.png", title: "History View", description: "Generated content is archived with timestamps and tool labels." },
+          { image: "./phone_en_07_settings.png", title: "Settings", description: "Language, theme, subscription, and user preferences are managed from one place." }
+        ]
+      }
+    };
+
+    const toolsGrid = document.getElementById("toolsGrid");
+    const featuresGrid = document.getElementById("featuresGrid");
+    const techGrid = document.getElementById("techGrid");
+    const pricingGrid = document.getElementById("pricingGrid");
+    const galleryImage = document.getElementById("galleryImage");
+    const gallerySlideTitle = document.getElementById("gallerySlideTitle");
+    const gallerySlideDescription = document.getElementById("gallerySlideDescription");
+    const galleryCounter = document.getElementById("galleryCounter");
+    const languageButtons = document.querySelectorAll("[data-lang]");
+    const translatableElements = document.querySelectorAll("[data-i18n]");
+    const ariaTranslatableElements = document.querySelectorAll("[data-i18n-aria-label]");
+
+    function getInitialLanguage() {
+      try {
+        const savedLanguage = localStorage.getItem("careercraft-language");
+        if (savedLanguage === "tr" || savedLanguage === "en") {
+          return savedLanguage;
+        }
+      } catch (error) {
+        console.warn("CareerCraft language preference could not be read.", error);
+      }
+
+      const browserLanguage = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
+      return browserLanguage.toLowerCase().startsWith("tr") ? "tr" : "en";
+    }
+
+    let currentLanguage = getInitialLanguage();
+    let currentSlide = 0;
+
+    function renderCards(items, container, iconClass) {
+      container.innerHTML = items.map(([icon, title, description]) => `
+        <article class="${iconClass}">
+          <div class="${iconClass.replace("card", "icon")}">${icon}</div>
+          <h3>${title}</h3>
+          <p>${description}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderPricing(items) {
+      pricingGrid.innerHTML = items.map((item) => `
+        <article class="price-card${item.highlight ? " highlight" : ""}">
+          ${item.highlight ? `<div class="price-badge">${content[currentLanguage].pricingBadge}</div>` : ""}
+          <h3>${item.name}</h3>
+          <div class="price-value">${item.price}</div>
+          <p>${item.description}</p>
+          <ul>${item.items.map((entry) => `<li>${entry}</li>`).join("")}</ul>
+        </article>
+      `).join("");
+    }
+
+    function renderSlide() {
+      const slides = content[currentLanguage].slides;
+      const slide = slides[currentSlide];
+      galleryImage.src = slide.image;
+      galleryImage.alt = slide.title;
+      gallerySlideTitle.textContent = slide.title;
+      gallerySlideDescription.textContent = slide.description;
+      galleryCounter.textContent = `${String(currentSlide + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+    }
+
+    function applyLanguage(lang) {
+      currentLanguage = lang;
+      document.documentElement.lang = lang;
+
+      try {
+        localStorage.setItem("careercraft-language", lang);
+      } catch (error) {
+        console.warn("CareerCraft language preference could not be saved.", error);
+      }
+
+      translatableElements.forEach((element) => {
+        const key = element.dataset.i18n;
+        element.textContent = content[lang][key];
+      });
+
+      ariaTranslatableElements.forEach((element) => {
+        const key = element.dataset.i18nAriaLabel;
+        element.setAttribute("aria-label", content[lang][key]);
+      });
+
+      renderCards(content[lang].tools, toolsGrid, "tool-card");
+      renderCards(content[lang].features, featuresGrid, "feature-card");
+      renderCards(content[lang].stack, techGrid, "tech-card");
+      renderPricing(content[lang].pricing);
+
+      currentSlide = 0;
+      renderSlide();
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.lang === lang);
+      });
+    }
+
+    document.getElementById("prevSlide").addEventListener("click", () => {
+      const slides = content[currentLanguage].slides;
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      renderSlide();
+    });
+
+    document.getElementById("nextSlide").addEventListener("click", () => {
+      const slides = content[currentLanguage].slides;
+      currentSlide = (currentSlide + 1) % slides.length;
+      renderSlide();
+    });
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+    });
+
+    applyLanguage(currentLanguage);
+    document.body.classList.add("ready");
+  </script>
+</body>
+</html>
